@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
-#include <Caribou/Topology/test/grid.h>
-#include <Caribou/Topology/test/mesh.h>
 
+#include "Concepts.h"
 
 int main(int argc, char **argv) {
     testing::InitGoogleTest(&argc, argv);

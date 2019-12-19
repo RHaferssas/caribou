@@ -37,6 +37,9 @@ struct RectangularHexahedron : public internal::BaseHexahedron<CanonicalElementT
     template<int nRows>
     using MapVector = Eigen::Map<const Vector<nRows>>;
 
+    template<int nRows>
+    using MapcVector = Eigen::Map<Vector<nRows>>;
+
     using Mat33 = Matrix<3, 3>;
     using Size = Vector<3>;
 
@@ -81,7 +84,7 @@ struct RectangularHexahedron : public internal::BaseHexahedron<CanonicalElementT
     }
 
     /** Compute the volume of the hexa */
-    inline
+    [[nodiscard]] inline
     FLOATING_POINT_TYPE
     volume() const
     {
@@ -102,7 +105,7 @@ struct RectangularHexahedron : public internal::BaseHexahedron<CanonicalElementT
     /**
      * Get the local coordinates frame (a.k.a. the rotation matrix) positioned at the center of the hexahedron
      */
-    inline
+    [[nodiscard]] inline
     Mat33
     frame() const
     {
@@ -112,7 +115,7 @@ struct RectangularHexahedron : public internal::BaseHexahedron<CanonicalElementT
     /**
      * Get the size (hx, hy, hz) of the hexahedron
      */
-    inline
+    [[nodiscard]] inline
     Size
     H() const
     {
@@ -148,7 +151,7 @@ struct RectangularHexahedron : public internal::BaseHexahedron<CanonicalElementT
      *
      * where hx, hy, and hz are the dimension of the edges 0-1, 0-3 and 0-4 respectively.
      */
-    inline
+    [[nodiscard]] inline
     Mat33
     jacobian () const
     {
@@ -192,7 +195,7 @@ struct RectangularHexahedron : public internal::BaseHexahedron<CanonicalElementT
      *
      * @note  based on polygon_intersects_cube by Don Hatch (January 1994)
      */
-    inline
+    [[nodiscard]] inline
     bool
     intersects(const Segment<3> & segment) const
     {
@@ -359,7 +362,7 @@ private:
      *
      * @note  based on polygon_intersects_cube by Don Hatch (January 1994)
      */
-    inline
+    [[nodiscard]] inline
     bool
     intersects_local(const Segment<3> & segment) const
     {

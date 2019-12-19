@@ -16,7 +16,7 @@ namespace caribou::topology::internal {
 /**
  * Simple representation of a Grid in space.
  *
- * ** Do not use this class directly. Use instead caribou::topology::engine::Grid. **
+ * ** Do not use this class directly. Use instead caribou::topology::Grid. **
  *
  * The functions declared in this class can be used with any type of grids (static grid, container grid, etc.).
  *

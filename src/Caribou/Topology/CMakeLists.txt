@@ -2,18 +2,27 @@ cmake_minimum_required(VERSION 3.1)
 project(Caribou.Topology)
 
 set(HEADER_FILES
+    BaseMesh.h
+    BaseDomain.h
     Grid/Grid.h
     Grid/Internal/BaseGrid.h
     Grid/Internal/BaseMultidimensionalGrid.h
     Grid/Internal/BaseUnidimensionalGrid.h
-    HashGrid.h)
+    HashGrid.h
+    Mesh.h
+    UnstructuredMesh.h
+)
 
-add_library(${PROJECT_NAME} INTERFACE)
+set(SOURCE_FILES
+    UnstructuredMesh.cpp
+)
 
-target_include_directories(${PROJECT_NAME} INTERFACE "$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src/>")
-target_include_directories(${PROJECT_NAME} INTERFACE "$<INSTALL_INTERFACE:include>")
+add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES})
 
-target_link_libraries(${PROJECT_NAME} INTERFACE Caribou.Geometry)
+target_include_directories(${PROJECT_NAME} PUBLIC "$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src/>")
+target_include_directories(${PROJECT_NAME} PUBLIC "$<INSTALL_INTERFACE:include>")
+
+target_link_libraries(${PROJECT_NAME} PUBLIC Caribou.Geometry)
 
 if (CARIBOU_BUILD_TESTS)
     add_subdirectory(test)

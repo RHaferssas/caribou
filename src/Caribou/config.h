@@ -3,6 +3,12 @@
 
 #include <cstdint>
 
+#ifndef NDEBUG
+# ifndef CARIBOU_DEBUG
+#  define CARIBOU_DEBUG
+# endif
+#endif
+
 #define CARIBOU_USE_DOUBLE
 
 #ifdef CARIBOU_USE_DOUBLE
@@ -15,6 +21,12 @@
 #define INTEGER_TYPE int32_t
 #define UNSIGNED_INTEGER_TYPE uint32_t
 #define EPSILON  ((float) 1.0e-15)
+#endif
+
+#ifdef CARIBOU_DEBUG
+    #define caribou_assert(x) assert(x)
+#else
+    #define caribou_assert(x)
 #endif
 
 #ifdef __cpp_if_constexpr
