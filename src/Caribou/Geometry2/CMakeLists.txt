@@ -2,7 +2,9 @@ cmake_minimum_required(VERSION 3.1)
 project(Caribou.Geometry2)
 
 set(HEADER_FILES
-        Traits/Element.h)
+        Segment.h
+        Traits/Element.h
+        Traits/IsoparametricElement.h)
 
 
 find_package(Eigen3 REQUIRED NO_MODULE)

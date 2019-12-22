@@ -5,16 +5,17 @@
 
 namespace caribou::topology {
 
+    struct BaseMesh;
+
     /**
-     * A domain is subspace of a mesh containing a set of points and the topological relation between them. It never
-     * works with space coordinates, but instead manage group of indices of the topological
-     * elements of its subspace. For example, a domain does not know the position of the nodes of an hexahedral element,
-     * but it does know the indices of those nodes in the mesh's position vector.
+     * A domain is subspace of a mesh containing a set of points and the topological relation between them.
      *
      * In a domain, all the elements are of the same type. For example, a domain can not contain both hexahedrons and
      * tetrahedrons.
      */
     struct BaseDomain {
+        friend struct BaseMesh;
+
         /**
          * Get the canonical dimension of the element contained in this domain, ie, the number of coordinates of a point
          * relative to the element basis. For example, a triangle has a canonical dimension of 2, even if it is inside
@@ -27,6 +28,22 @@ namespace caribou::topology {
          * Get the number of elements contained in the domain.
          */
         [[nodiscard]] virtual auto number_of_elements() const -> UNSIGNED_INTEGER_TYPE= 0;
+
+        /**
+         * Get the mesh associated with this domain.
+         */
+        inline auto mesh() const -> const BaseMesh & {
+            return *p_mesh;
+        }
+
+    private:
+        explicit BaseDomain(const BaseMesh * mesh) : p_mesh(mesh) {
+            if (!mesh) {
+                throw std::runtime_error("Trying to instantiate a domain without mesh.");
+            }
+        }
+
+        const BaseMesh * p_mesh;
     };
 }
 

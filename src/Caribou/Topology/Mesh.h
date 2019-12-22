@@ -4,7 +4,7 @@
 #include <Caribou/config.h>
 #include <Caribou/Topology/BaseMesh.h>
 
-#include <Eigen/Core>
+#include <array>
 
 namespace caribou::topology {
 
@@ -13,15 +13,13 @@ namespace caribou::topology {
     template <UNSIGNED_INTEGER_TYPE Dimension>
     class Mesh : public BaseMesh {
     public:
-        /*!
-         * Mesh should not be instanciated directly.
-         */
-        Mesh() = delete;
+
+        using WorldCoordinate = std::array<FLOATING_POINT_TYPE, Dimension>;
 
         /*!
         * Get the position coordinates of a node from its index.
         */
-        [[nodiscard]] virtual inline auto position(UNSIGNED_INTEGER_TYPE index) const -> Eigen::Matrix<FLOATING_POINT_TYPE, Dimension, 1> = 0;
+        [[nodiscard]] virtual inline auto position(UNSIGNED_INTEGER_TYPE index) const -> WorldCoordinate = 0;
 
         /*!
          * \copydoc caribou::topology::BaseMesh::dimension

@@ -17,6 +17,9 @@ struct Element {
     static constexpr INTEGER_TYPE Dimension = 3;
     static constexpr INTEGER_TYPE NumberOfNodesAtCompileTime = 8;
 
+    // Constructor
+    Element(FLOATING_POINT_TYPE*) {};
+
     // Functions
     inline UNSIGNED_INTEGER_TYPE number_of_nodes() const {return NumberOfNodesAtCompileTime;}
     inline Vec3  node(UNSIGNED_INTEGER_TYPE) const {return Vec3::Zero();};
@@ -24,6 +27,7 @@ struct Element {
 };
 
 struct IsoparametricElement : Element {
+    using Element::Element;
     inline Vec8 N (const Vec3 & xi) const { return Vec8::Zero(); }
 };
 static_assert(caribou::geometry::is_an_element_v<Element>);

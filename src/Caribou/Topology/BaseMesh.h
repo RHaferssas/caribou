@@ -2,6 +2,7 @@
 #define CARIBOU_TOPOLOGY_BASEMESH_H
 
 #include <Caribou/config.h>
+
 #include <string>
 #include <memory>
 
@@ -32,7 +33,18 @@ namespace caribou::topology {
         /*!
          * Adds a domain to the mesh.
          */
-        virtual inline void add_domain(std::string name, std::unique_ptr<BaseDomain> domain) = 0;
+        template<typename Domain, REQUIRES(std::is_base_of_v<BaseDomain, Domain>)>
+        inline auto add(const std::string & name) -> Domain * {
+            auto domain_ptr = new Domain(static_cast<const BaseMesh *>(this));
+            this->do_add_domain(name, std::unique_ptr<BaseDomain>(dynamic_cast<BaseDomain *>(domain_ptr)));
+            return dynamic_cast<Domain*>(domain_ptr);
+        }
+
+    private:
+        /*!
+         * Adds a domain to the mesh.
+         */
+        virtual auto do_add_domain(std::string name, std::unique_ptr<BaseDomain> domain) -> BaseDomain * = 0;
     };
 }
 

@@ -23,12 +23,6 @@
 #define EPSILON  ((float) 1.0e-15)
 #endif
 
-#ifdef CARIBOU_DEBUG
-    #define caribou_assert(x) assert(x)
-#else
-    #define caribou_assert(x)
-#endif
-
 #ifdef __cpp_if_constexpr
 #define CONSTEXPR_IF constexpr
 #else

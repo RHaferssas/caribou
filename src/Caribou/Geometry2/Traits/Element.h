@@ -7,10 +7,6 @@
 namespace caribou::geometry {
     namespace internal {
 
-
-        template<class T>
-        using element_canonical_dimension_t = decltype( T::CanonicalDimension );
-
         template<class T>
         using element_dimension_t = decltype( T::Dimension );
 
@@ -41,9 +37,9 @@ namespace caribou::geometry {
      * <code>
      *   struct T {
      *     static constexpr INTEGER_TYPE           NumberOfNodesAtCompileTime = N1;
-     *     static constexpr UNSIGNED_INTEGER_TYPE  CanonicalDimension = N2;
      *     static constexpr UNSIGNED_INTEGER_TYPE  Dimension = N3;
      *
+     *     T (FLOATING_POINT_TYPE * positions) = 0;
      *     UNSIGNED_INTEGER_TYPE number_of_nodes () const = 0;
      *     Vector<Dimension> node (UNSIGNED_INTEGER_TYPE index) const = 0;
      *     Matrix<NumberOfNodesAtCompileTime, Dimension> nodes () const = 0;
@@ -53,8 +49,6 @@ namespace caribou::geometry {
      * with
      *   NumberOfNodesAtCompileTime   Known number of nodes in the elements at compile time. If the number is dynamic
      *                                (determined during runtime), set it to -1.
-     *   CanonicalDimension           Dimension of the canonical version of the element. For example, the canonical
-     *                                dimension of a triangle is 2.
      *   Dimension                    Dimension of the element. For example, a triangle represented in a 3D world has
      *                                its dimension set to 3 (x, y, z), whereas its canonical dimension is
      *                                always 2 (u, v).
@@ -62,8 +56,8 @@ namespace caribou::geometry {
     template< class T>
     struct is_an_element<T, CLASS_REQUIRES(
             caribou::internal::is_detected_convertible_v<INTEGER_TYPE,          internal::element_number_of_nodes_at_compile_time_t, T> and
-            caribou::internal::is_detected_convertible_v<UNSIGNED_INTEGER_TYPE, internal::element_canonical_dimension_t, T> and
             caribou::internal::is_detected_convertible_v<UNSIGNED_INTEGER_TYPE, internal::element_dimension_t, T> and
+            std::is_constructible_v<T, FLOATING_POINT_TYPE*> and
             caribou::internal::is_detected_convertible_v<UNSIGNED_INTEGER_TYPE, internal::element_number_of_nodes_t, T> and
             caribou::internal::is_detected_v<internal::element_node_t, T, UNSIGNED_INTEGER_TYPE> and
             caribou::internal::is_detected_v<internal::element_nodes_t, T>

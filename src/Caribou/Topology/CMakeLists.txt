@@ -4,6 +4,7 @@ project(Caribou.Topology)
 set(HEADER_FILES
     BaseMesh.h
     BaseDomain.h
+    Domain.h
     Grid/Grid.h
     Grid/Internal/BaseGrid.h
     Grid/Internal/BaseMultidimensionalGrid.h
