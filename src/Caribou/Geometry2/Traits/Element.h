@@ -3,6 +3,7 @@
 
 #include <Caribou/config.h>
 #include <Caribou/Traits.h>
+#include <Caribou/Constants.h>
 
 namespace caribou::geometry {
     namespace internal {
@@ -39,7 +40,8 @@ namespace caribou::geometry {
      *     static constexpr INTEGER_TYPE           NumberOfNodesAtCompileTime = N1;
      *     static constexpr UNSIGNED_INTEGER_TYPE  Dimension = N3;
      *
-     *     T (FLOATING_POINT_TYPE * positions) = 0;
+     *     T (const FLOATING_POINT_TYPE [NumberOfNodesAtCompileTime*Dimension] positions) = 0; // Must be defined if NumberOfNodesAtCompileTime != Dynamic
+     *     T (FLOATING_POINT_TYPE * positions, UNSIGNED_INTEGER_TYPE number_of_nodes) = 0; // Must be defined if NumberOfNodesAtCompileTime == Dynamic
      *     UNSIGNED_INTEGER_TYPE number_of_nodes () const = 0;
      *     Vector<Dimension> node (UNSIGNED_INTEGER_TYPE index) const = 0;
      *     Matrix<NumberOfNodesAtCompileTime, Dimension> nodes () const = 0;
@@ -57,7 +59,10 @@ namespace caribou::geometry {
     struct is_an_element<T, CLASS_REQUIRES(
             caribou::internal::is_detected_convertible_v<INTEGER_TYPE,          internal::element_number_of_nodes_at_compile_time_t, T> and
             caribou::internal::is_detected_convertible_v<UNSIGNED_INTEGER_TYPE, internal::element_dimension_t, T> and
-            std::is_constructible_v<T, FLOATING_POINT_TYPE*> and
+            (
+                    (T::NumberOfNodesAtCompileTime == caribou::Dynamic and std::is_constructible_v<T, FLOATING_POINT_TYPE*, UNSIGNED_INTEGER_TYPE>) or
+                    (T::NumberOfNodesAtCompileTime != caribou::Dynamic and std::is_constructible_v<T, FLOATING_POINT_TYPE[T::NumberOfNodesAtCompileTime*T::Dimension]>)
+            ) and
             caribou::internal::is_detected_convertible_v<UNSIGNED_INTEGER_TYPE, internal::element_number_of_nodes_t, T> and
             caribou::internal::is_detected_v<internal::element_node_t, T, UNSIGNED_INTEGER_TYPE> and
             caribou::internal::is_detected_v<internal::element_nodes_t, T>

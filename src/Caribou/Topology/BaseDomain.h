@@ -5,8 +5,6 @@
 
 namespace caribou::topology {
 
-    struct BaseMesh;
-
     /**
      * A domain is subspace of a mesh containing a set of points and the topological relation between them.
      *
@@ -29,21 +27,6 @@ namespace caribou::topology {
          */
         [[nodiscard]] virtual auto number_of_elements() const -> UNSIGNED_INTEGER_TYPE= 0;
 
-        /**
-         * Get the mesh associated with this domain.
-         */
-        inline auto mesh() const -> const BaseMesh & {
-            return *p_mesh;
-        }
-
-    private:
-        explicit BaseDomain(const BaseMesh * mesh) : p_mesh(mesh) {
-            if (!mesh) {
-                throw std::runtime_error("Trying to instantiate a domain without mesh.");
-            }
-        }
-
-        const BaseMesh * p_mesh;
     };
 }
 

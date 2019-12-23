@@ -4,7 +4,7 @@ project(Caribou.Topology.Test)
 
 set(HEADER_FILES
         grid.h
-        mesh.h)
+        test_unstructured_grid.h)
 
 set(SOURCE_FILES
         main.cpp)

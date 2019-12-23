@@ -16,20 +16,37 @@ namespace caribou::topology {
         class ElementStorage;
     }
 
-    template <UNSIGNED_INTEGER_TYPE Dimension>
-    class Mesh;
-
     /*!
      * A domain implements the BaseDomain interface with a given element type.
      *
      * @tparam Element See caribou::geometry::is_an_element
      */
-    template <typename Element>
+    template <typename Mesh, typename Element>
     class Domain : public BaseDomain, private internal::ElementStorage<Element> {
         static_assert(caribou::geometry::is_an_element_v<Element>, "Trying to specialize a domain with a non element type.");
 
+        friend Mesh;
     public:
+        /*!
+         * If the Element type as a static number of nodes at compile time, than Indices is
+         *  std::vector<std::array<unsigned int, Element::NumberOfNodesAtCompileTime>>
+         * else, if the Element type as a dynamic number of nodes (known at runtime), than Indices is
+         *  std::vector<std::vector<unsigned int>>
+         */
         using Indices = typename internal::ElementStorage<Element>::Indices;
+
+        explicit Domain(const Mesh * mesh) : p_mesh(mesh) {
+            if (!mesh) {
+                throw std::runtime_error("Trying to instantiate a domain without mesh.");
+            }
+        }
+
+        /**
+         * Get the mesh associated with this domain.
+         */
+        [[nodiscard]] inline auto mesh() const -> const Mesh & {
+            return *p_mesh;
+        }
 
         /*!
          * \copydoc caribou::topology::BaseDomain::canonical_dimension
@@ -74,19 +91,22 @@ namespace caribou::topology {
             const auto indices = element_indices(index);
 
             // Get the mesh
-            const auto & mesh = static_cast<Mesh<Element::Dimension>>(this->mesh());
+            const auto & mesh = this->mesh();
 
             // Fill-in the position vector of element nodes
             if constexpr (Element::NumberOfNodesAtCompileTime == caribou::Dynamic) {
-                std::vector<typename Mesh<Element::Dimension>::WorldCoordinate> positions (indices.size());
-
+                std::vector<typename Mesh::WorldCoordinate> positions (indices.size());
+                mesh.get_positions(indices, positions);
+                return Element(positions.data(), positions.size());
             } else {
-
+                std::array<typename Mesh::WorldCoordinate, Element::NumberOfNodesAtCompileTime> positions;
+                mesh.get_positions(indices, positions);
+                return Element(positions.data()->data());
             }
         }
 
     private:
-        using BaseDomain::BaseDomain;
+        const Mesh * p_mesh;
 
     };
 

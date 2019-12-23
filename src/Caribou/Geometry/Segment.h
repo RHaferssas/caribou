@@ -27,6 +27,12 @@ struct Segment : public internal::BaseSegment<Dim, CanonicalElementType, Segment
 
     static_assert(Dim == 1 or Dim == 2 or Dim == 3, "Only 1D, 2D and 3D segments are supported.");
 
+    /*!
+     * Construct the segment from an array of float.
+     * The array will be read with a row-major format (ex: [x0 y0 z0 x1 y1 z1])
+     */
+    constexpr explicit Segment(const FLOATING_POINT_TYPE data [NumberOfNodesAtCompileTime*Dim]) : p_nodes(data) {}
+
     template <
         typename ...Nodes,
         REQUIRES(NumberOfNodesAtCompileTime == sizeof...(Nodes)+1)
@@ -46,10 +52,6 @@ struct Segment : public internal::BaseSegment<Dim, CanonicalElementType, Segment
     {
         static_assert(Dim == 1 and "Constructor with floating point coordinate is only available for 1D segments.");
     }
-
-    constexpr explicit
-    Segment(const FLOATING_POINT_TYPE * data) : p_nodes(data)
-    {}
 
     /**
      * Get the number of nodes of the element

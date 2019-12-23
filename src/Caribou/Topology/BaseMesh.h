@@ -29,22 +29,6 @@ namespace caribou::topology {
          * Get the number of domains of the mesh.
          */
         [[nodiscard]] virtual inline auto number_of_domains() const -> UNSIGNED_INTEGER_TYPE = 0;
-
-        /*!
-         * Adds a domain to the mesh.
-         */
-        template<typename Domain, REQUIRES(std::is_base_of_v<BaseDomain, Domain>)>
-        inline auto add(const std::string & name) -> Domain * {
-            auto domain_ptr = new Domain(static_cast<const BaseMesh *>(this));
-            this->do_add_domain(name, std::unique_ptr<BaseDomain>(dynamic_cast<BaseDomain *>(domain_ptr)));
-            return dynamic_cast<Domain*>(domain_ptr);
-        }
-
-    private:
-        /*!
-         * Adds a domain to the mesh.
-         */
-        virtual auto do_add_domain(std::string name, std::unique_ptr<BaseDomain> domain) -> BaseDomain * = 0;
     };
 }
 
