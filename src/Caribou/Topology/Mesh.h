@@ -41,6 +41,7 @@ namespace caribou::topology {
          */
         template<typename Element>
         inline auto add_domain(const std::string & name) -> Domain<Element> * {
+            static_assert(caribou::geometry::is_an_element_v<Element>, "Only valid Element type can be used to build a domain.");
             if (p_domains.find(name) != p_domains.end()) {
                 throw std::domain_error(std::string("A domain with the name ") + name + " already exists.");
             }

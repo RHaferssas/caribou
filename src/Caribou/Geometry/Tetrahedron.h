@@ -18,9 +18,9 @@ struct Tetrahedron : public internal::BaseTetrahedron<CanonicalElementType::Numb
 template <>
 struct Tetrahedron<interpolation::Tetrahedron4> : public internal::BaseTetrahedron<4, interpolation::Tetrahedron4, Tetrahedron<interpolation::Tetrahedron4>>
 {
-    static constexpr INTEGER_TYPE NumberOfNodes = 4;
+    static constexpr UNSIGNED_INTEGER_TYPE NumberOfNodesAtCompileTime = CanonicalElementType::NumberOfNodes;
     using CanonicalElementType = interpolation::Tetrahedron4;
-    using Base = internal::BaseTetrahedron<NumberOfNodes, CanonicalElementType, Tetrahedron<CanonicalElementType>>;
+    using Base = internal::BaseTetrahedron<NumberOfNodesAtCompileTime, CanonicalElementType, Tetrahedron<CanonicalElementType>>;
     using WorldCoordinates = typename Base::WorldCoordinates;
     using FaceType = Triangle<3, typename CanonicalElementType::FaceType>;
 

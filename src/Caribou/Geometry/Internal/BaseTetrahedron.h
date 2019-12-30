@@ -27,8 +27,13 @@ struct BaseTetrahedron : public CanonicalElementType
 
     BaseTetrahedron()
         : p_nodes(Map<NumberOfNodes, 3>(&CanonicalElementType::nodes[0][0]))
-    {
-    }
+    {}
+
+    /*!
+     * Construct the element from an array of float.
+     * The array will be read with a row-major format (ex: [x0 y0 z0 x1 y1 z1 x2 y2 z2 ...])
+     */
+    constexpr explicit BaseTetrahedron(const FLOATING_POINT_TYPE data [NumberOfNodes*3]) : p_nodes(data) {}
 
     template <
         typename ...Nodes,
@@ -42,6 +47,15 @@ struct BaseTetrahedron : public CanonicalElementType
     BaseTetrahedron(const Matrix<NumberOfNodes, 3, Eigen::RowMajor> & m)
         : p_nodes(m)
     {}
+
+    /**
+     * Get the number of nodes of the element
+     */
+    inline constexpr
+    auto
+    number_of_nodes() const {
+        return NumberOfNodes;
+    }
 
     /** Get the Node at given index */
     inline

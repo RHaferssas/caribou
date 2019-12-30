@@ -9,6 +9,10 @@ set(HEADER_FILES
 set(SOURCE_FILES
         main.cpp)
 
+if (CARIBOU_WITH_VTK)
+    list(APPEND ${HEADER_FILES} test_vtkreader.h)
+endif()
+
 enable_testing()
 find_package(GTest REQUIRED)
 

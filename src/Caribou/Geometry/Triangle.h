@@ -12,6 +12,7 @@ namespace caribou::geometry {
 template <size_t Dim, typename CanonicalElementType = interpolation::Triangle3>
 struct Triangle : public internal::BaseTriangle<Dim, CanonicalElementType, Triangle<Dim, CanonicalElementType>>
 {
+    static constexpr UNSIGNED_INTEGER_TYPE NumberOfNodesAtCompileTime = CanonicalElementType::NumberOfNodes;
     static constexpr INTEGER_TYPE NumberOfNodes = CanonicalElementType::NumberOfNodes;
 
     using LocalCoordinates = typename CanonicalElementType::LocalCoordinates;
@@ -22,6 +23,12 @@ struct Triangle : public internal::BaseTriangle<Dim, CanonicalElementType, Trian
 
     static_assert(Dim == 2 or Dim == 3, "Only 2D and 3D triangles are supported.");
 
+    /*!
+     * Construct the triangle from an array of float.
+     * The array will be read with a row-major format (ex: [x0 y0 z0 x1 y1 z1 x2 y2 z2])
+     */
+    constexpr explicit Triangle(const FLOATING_POINT_TYPE data [NumberOfNodesAtCompileTime*Dim]) : p_nodes(data) {}
+
     template <
             typename ...Nodes,
             REQUIRES(NumberOfNodes == sizeof...(Nodes)+1)
@@ -29,6 +36,15 @@ struct Triangle : public internal::BaseTriangle<Dim, CanonicalElementType, Trian
     Triangle(const WorldCoordinates & first_node, Nodes&&...remaining_nodes)
     {
         construct_from_nodes<0>(first_node, std::forward<Nodes>(remaining_nodes)...);
+    }
+
+    /**
+     * Get the number of nodes of the element
+     */
+    inline constexpr
+    auto
+    number_of_nodes() const {
+        return NumberOfNodesAtCompileTime;
     }
 
     inline
@@ -61,7 +77,7 @@ struct Triangle : public internal::BaseTriangle<Dim, CanonicalElementType, Trian
     }
 
     /**
-     * Compute the transformation of a local position {u} to its world position {x,y,z}
+     * Compute the transformation of a local position {u,v} to its world position {x,y,z}
      */
     inline
     WorldCoordinates

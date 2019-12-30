@@ -2,6 +2,10 @@
 #include <Caribou/Topology/test/grid.h>
 #include <Caribou/Topology/test/test_unstructured_grid.h>
 
+#ifdef CARIBOU_WITH_VTK
+#include <Caribou/Topology/test/test_vtkreader.h>
+#endif
+
 
 int main(int argc, char **argv) {
     testing::InitGoogleTest(&argc, argv);
