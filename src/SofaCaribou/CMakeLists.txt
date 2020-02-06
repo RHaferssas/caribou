@@ -7,8 +7,9 @@ set(HEADER_FILES
     GraphComponents/Forcefield/TetrahedronElasticForce.h
     GraphComponents/Forcefield/TractionForce.h
     GraphComponents/Ode/StaticODESolver.h
-        GraphComponents/Solver/ConjugateGradientSolver.h
-    GraphComponents/Topology/FictitiousGrid.h
+    	GraphComponents/Solver/ConjugateGradientSolver.h
+	GraphComponents/Topology/FictitiousGrid.h
+	GraphComponents/Constraints/ContactSolver.h
     Traits.h)
 
 set(TEMPLATE_FILES
@@ -23,6 +24,7 @@ set(SOURCE_FILES
     GraphComponents/Ode/StaticODESolver.cpp
         GraphComponents/Solver/ConjugateGradientSolver.cpp
     GraphComponents/Topology/FictitiousGrid.cpp
+	GraphComponents/Constraints/ContactSolver.cpp
     init.cpp)
 
 # Try to find Sofa's cmake prefix
@@ -54,6 +56,9 @@ endif()
 
 find_package(SofaBase REQUIRED)
 find_package(SofaFramework REQUIRED)
+find_package(SofaGeneral REQUIRED)
+
+
 find_package(OpenMP)
 find_package(LAPACK)
 find_package(LAPACKE)
@@ -65,7 +70,10 @@ target_include_directories(${PROJECT_NAME} PUBLIC "$<BUILD_INTERFACE:${CMAKE_SOU
 target_include_directories(${PROJECT_NAME} PUBLIC "$<INSTALL_INTERFACE:include>")
 target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC Caribou.Topology Caribou.Geometry)
 target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC SofaCore)
+
+target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC SofaConstraint)
 target_link_libraries(${PROJECT_NAME} PUBLIC SofaCore SofaBaseTopology)
+target_link_libraries(${PROJECT_NAME} PUBLIC SofaConstraint)
 target_link_libraries(${PROJECT_NAME} PUBLIC Caribou.Topology Caribou.Geometry)
 
 
